@@ -54,13 +54,77 @@ Cada guarda-sol recebe um QR Code único, gerado dinamicamente, apontando para `
 ```
 beachbar-app/
 ├── src/
-│   └── App.jsx       # Aplicação completa (login, cliente, garçom, admin)
+│   ├── App.jsx          # Aplicação completa (login, cliente, garçom, admin)
+│   └── main.jsx         # Ponto de entrada React
+├── index.html
+├── package.json
+├── vite.config.js
+├── firebase.json        # Config do Firebase Hosting
+├── .firebaserc           # ID do projeto Firebase
 └── README.md
 ```
 
-## 🚀 Como usar
+## 🔥 Deploy no Firebase Hosting
 
-Este projeto foi desenvolvido como um artifact React standalone. Para rodar localmente, integre o `src/App.jsx` a um projeto React (Vite ou Create React App) e instale as dependências necessárias (`react`, `react-dom`).
+O projeto já está configurado como app Vite + React, pronto para deploy.
+
+### 1. Instale as dependências
+
+```bash
+npm install
+```
+
+### 2. Instale a Firebase CLI (se ainda não tiver)
+
+```bash
+npm install -g firebase-tools
+firebase login
+```
+
+### 3. Configure o projeto Firebase
+
+Crie um projeto em [console.firebase.google.com](https://console.firebase.google.com), depois edite o arquivo `.firebaserc` e troque `SEU-PROJECT-ID-AQUI` pelo ID real do seu projeto:
+
+```json
+{
+  "projects": {
+    "default": "meu-projeto-beachbar"
+  }
+}
+```
+
+Ou rode:
+
+```bash
+firebase use --add
+```
+
+### 4. Build + Deploy
+
+```bash
+npm run deploy
+```
+
+Esse comando roda `vite build` (gera a pasta `dist/`) e depois `firebase deploy --only hosting`.
+
+Ou separadamente:
+
+```bash
+npm run build
+firebase deploy --only hosting
+```
+
+### 5. Pronto 🎉
+
+Seu app estará disponível em `https://SEU-PROJECT-ID.web.app`. Use essa URL como base ao gerar os QR Codes dos guarda-sóis no painel Admin.
+
+> **Nota sobre rotas:** o `firebase.json` já está configurado com rewrite para SPA (`**` → `/index.html`), então o parâmetro `?guardasol=N` funciona normalmente em qualquer URL do site.
+
+### Variáveis sensíveis
+
+Antes de ir para produção de verdade, configure:
+- **Google OAuth Client ID** real (Google Identity Services)
+- **Chave da API Anthropic** — nunca exponha no front-end; crie uma Cloud Function (Firebase Functions) que faça a chamada à API no backend e o front-end consuma essa function
 
 ## ⚠️ Status
 
